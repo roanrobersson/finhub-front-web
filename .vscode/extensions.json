@@ -1,0 +1,12 @@
+
+{
+	"recommendations": [
+		"dbaeumer.vscode-eslint",
+		"vivaxy.vscode-conventional-commits",
+		"fabiospampinato.vscode-terminals",
+		"EcksDy.env-switcher",		
+		"esbenp.prettier-vscode",
+		"bradlc.vscode-tailwindcss",
+		"neotan.vscode-auto-restart-typescript-eslint-servers"
+	]
+}

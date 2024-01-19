@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	* {
+		box-sizing: border-box;
+		@apply border-primary;
+	}
+
+	html {
+		font-family: manrope, sans-serif;
+	}
+
+	body {
+		@apply bg-primary text-primary;
+		font-feature-settings:
+			"rlig" 1,
+			"calt" 1;
+	}
+}
+
+@layer base {
+	:root {
+		--primary: var(--primary-500);
+		--primary-100: #cce0ff;
+		--primary-200: #99c2ff;
+		--primary-300: #66a3ff;
+		--primary-400: #3385ff;
+		--primary-500: #0062ff;
+		--primary-600: #0056e0;
+		--primary-700: #0048c0;
+		--primary-800: #003a9f;
+		--primary-900: #00287a;
+		--primary-foreground: #ffffff;
+
+		--secondary: var(--secondary-500);
+		--secondary-100: #e2f3fc;
+		--secondary-200: #bee7f9;
+		--secondary-300: #96daf6;
+		--secondary-400: #43beed;
+		--secondary-500: #1ba6dc;
+		--secondary-600: #0e85bb;
+		--secondary-700: #0c6a98;
+		--secondary-800: #0e5a7e;
+		--secondary-900: #124b68;
+		--secondary-foreground: #ffffff;
+
+		--dark: var(--dark-500);
+		--dark-100: #3a3d42;
+		--dark-200: #313439;
+		--dark-300: #292e33;
+		--dark-400: #272a2f;
+		--dark-500: #20242b;
+		--dark-600: #1b1f25;
+		--dark-700: #181b20;
+		--dark-800: #141619;
+		--dark-900: #121313;
+		--dark-foreground: #ffffff;
+
+		--neutral: var(--neutral-500);
+		--neutral-100: #f9fafc;
+		--neutral-200: #f1f4f8;
+		--neutral-300: #e8ecf2;
+		--neutral-400: #e2e7ee;
+		--neutral-500: #dfe5f1;
+		--neutral-600: #c5ccdb;
+		--neutral-700: #a6aebf;
+		--neutral-800: #868fa2;
+		--neutral-900: #686f82;
+		--neutral-foreground: #ffffff;
+
+		--info: #3183ff;
+		--info-foreground: #ffffff;
+
+		--success: #61b449;
+		--success-foreground: #ffffff;
+
+		--danger: #edd92a;
+		--danger-foreground: #ffffff;
+
+		--error: #ff5252;
+		--error-foreground: #ffffff;
+
+		--radius: 1rem;
+	}
+}
+
+@layer base {
+	:root {
+		--text-primary: #2e2a47;
+		--text-secondary: #7e8ca0;
+		--bg-primary: var(--neutral-100);
+		--card: #ffffff;
+		--bg-field-primary: #ffffff;
+		--bg-field-secondary: var(--neutral-100);
+		--border-primary: var(--neutral-200);
+		--ring-primary: var(--primary);
+		--outline-primary: var(--primary);
+	}
+
+	.dark {
+		--text-primary: #2e2a47;
+		--text-secondary: #7e8ca0;
+		--bg-primary: var(--dark-900);
+		--card: var(--dark-700);
+		--bg-field-primary: var(--dark-700);
+		--bg-field-secondary: var(--dark-500);
+		--border-primary: var(--dark-400);
+		--ring-primary: #ffffff;
+		--outline-primary: #ffffff;
+	}
+}
+
+@layer components {
+	.fluid-container {
+		@apply px-7 lg:container min-[1052px]:px-0 min-[1280px]:px-7 min-[1308px]:px-0;
+	}
+}

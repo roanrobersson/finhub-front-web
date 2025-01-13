@@ -39,7 +39,7 @@ const title = {
 		}
 	],
 	"title-3xl": [
-		"25rem", // 32px
+		"2rem", // 32px
 		{
 			lineHeight: "1.4",
 			fontWeight: "800"

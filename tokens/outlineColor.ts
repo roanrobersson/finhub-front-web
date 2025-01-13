@@ -3,6 +3,9 @@ import type { RecursiveKeyValuePair, ResolvableTo } from "tailwindcss/types/conf
 const outlineColor = {
 	primary: {
 		DEFAULT: "var(--outline-primary)"
+	},
+	secondary: {
+		DEFAULT: "var(--outline-secondary)"
 	}
 } satisfies ResolvableTo<RecursiveKeyValuePair>;
 

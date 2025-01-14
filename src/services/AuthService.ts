@@ -2,13 +2,20 @@ import { AxiosResponse } from "axios";
 
 import api from "./api";
 
-type GetProfileResponse = {
+type ProfileResponse = {
 	id: number;
 	name: string;
 	email: string;
 	roles: string[];
 	permissions: string[];
 	picture: string | null;
+};
+
+type SignUpParams = {
+	name: string;
+	email: string;
+	password: string;
+	picture?: string | null;
 };
 
 class AuthService {
@@ -25,12 +32,16 @@ class AuthService {
 		});
 	};
 
+	static signUp = async (params: SignUpParams): Promise<AxiosResponse<ProfileResponse>> => {
+		return api.auth.post<ProfileResponse>(`/auth/signup`, params);
+	};
+
 	static signOut = async (): Promise<AxiosResponse<void>> => {
 		return api.auth.post<void>(`/auth/signout`);
 	};
 
-	static getProfile = async (): Promise<AxiosResponse<GetProfileResponse>> => {
-		return api.get<GetProfileResponse>(`/auth/profile`);
+	static getProfile = async (): Promise<AxiosResponse<ProfileResponse>> => {
+		return api.get<ProfileResponse>(`/auth/profile`);
 	};
 }
 

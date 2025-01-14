@@ -1,5 +1,5 @@
 import { createContext, FC, PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useState } from "react";
-import { useSignIn, useSignInWithGoogle, useSignOut } from "queries/authQueries";
+import { useSignIn, useSignInWithGoogle, useSignOut, useSignUp } from "queries/authQueries";
 
 import AuthService from "services/AuthService";
 
@@ -16,6 +16,7 @@ type Session = {
 	} | null;
 	signInQuery: ReturnType<typeof useSignIn>;
 	signInWithGoogleQuery: ReturnType<typeof useSignInWithGoogle>;
+	signUpQuery: ReturnType<typeof useSignUp>;
 	signOutQuery: ReturnType<typeof useSignOut>;
 };
 
@@ -35,6 +36,12 @@ const SessionProvider: FC<SessionProviderProps> = ({ fallback, children }) => {
 		}
 	});
 	const signInWithGoogleQuery = useSignInWithGoogle({
+		onSuccess: async () => {
+			const user = await AuthService.getProfile();
+			setUser(user.data);
+		}
+	});
+	const signUpQuery = useSignUp({
 		onSuccess: async () => {
 			const user = await AuthService.getProfile();
 			setUser(user.data);
@@ -70,9 +77,10 @@ const SessionProvider: FC<SessionProviderProps> = ({ fallback, children }) => {
 			user,
 			signInQuery,
 			signInWithGoogleQuery,
+			signUpQuery,
 			signOutQuery
 		}),
-		[user, signInQuery, signInWithGoogleQuery, signOut]
+		[user, signInQuery, signInWithGoogleQuery, signUpQuery, signOut]
 	);
 
 	return <SessionContext value={session}>{isLoading ? fallback : children}</SessionContext>;

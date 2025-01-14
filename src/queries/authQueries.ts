@@ -36,6 +36,21 @@ export const useSignInWithGoogle = (
 	);
 };
 
+type UseSignUpVariables = Parameters<typeof AuthService.signUp>[0];
+
+export const useSignUp = (
+	options?: Omit<UseMutationOptions<unknown, unknown, UseSignUpVariables>, "mutationFn">,
+	queryClient?: QueryClient
+) => {
+	return useMutation(
+		{
+			mutationFn: AuthService.signUp,
+			...options
+		},
+		queryClient
+	);
+};
+
 type UseSignOutVariables = Parameters<typeof AuthService.signIn>[0];
 
 export const useSignOut = (

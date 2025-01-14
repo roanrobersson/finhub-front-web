@@ -1,10 +1,11 @@
 import { FC } from "react";
 import { Helmet } from "react-helmet";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { DevTool } from "@hookform/devtools";
 import { zodResolver } from "@hookform/resolvers/zod";
-import GoogleIcon from "assets/icons/google.svg?react";
+import { CredentialResponse } from "@react-oauth/google";
+import { HttpStatusCode, isAxiosError } from "axios";
 import { cc } from "lib/tailwindUtils";
 import { CircleXIcon } from "lucide-react";
 import { Button } from "primereact/button";
@@ -13,6 +14,7 @@ import { Password } from "primereact/password";
 import routeKeys from "routeKeys";
 import z from "zod";
 
+import GoogleLoginButton from "components/GoogleLoginButton";
 import useSession from "hooks/useSession";
 
 const schema = z.object({
@@ -34,35 +36,56 @@ const SignUp: FC = () => {
 		control,
 		setError,
 		handleSubmit,
-		watch,
 		formState: { errors }
 	} = useForm<TFormFields>({
 		resolver: zodResolver(schema),
 		defaultValues: {
-			name: "",
-			email: "",
-			password: ""
+			name: "New",
+			email: "new@gmail.com",
+			password: "12345678"
 		}
 	});
 	const navigate = useNavigate();
-	const { signInQuery } = useSession();
+	const { signInQuery, signInWithGoogleQuery, signUpQuery } = useSession();
 
 	const onSubmit: SubmitHandler<TFormFields> = async (data) => {
 		try {
-			await signInQuery.mutateAsync({
+			await signUpQuery.mutateAsync({
+				name: data.name,
 				email: data.email,
 				password: data.password
 			});
 			navigate(routeKeys.home());
 		} catch (error) {
-			setError("root", { message: "Invalid credentials" });
+			if (isAxiosError(error) && error.status === HttpStatusCode.Conflict) {
+				return setError("email", { message: "There is already an account with this email" });
+			}
+			setError("root", { message: "Error signing up" });
 		}
+	};
+
+	const onGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+		try {
+			if (!credentialResponse.credential) {
+				throw new Error("Invalid credentials");
+			}
+			await signInWithGoogleQuery.mutateAsync({
+				token: credentialResponse.credential
+			});
+			navigate(routeKeys.home());
+		} catch (error) {
+			setError("root", { message: "Error signing in with Google" });
+		}
+	};
+
+	const onGoogleLoginError = () => {
+		setError("root", { message: "Error signing in with Google" });
 	};
 
 	return (
 		<>
 			<Helmet>
-				<title>Sign In</title>
+				<title>Sign Up</title>
 			</Helmet>
 
 			<div className="w-full max-w-[440px]">
@@ -71,14 +94,7 @@ const SignUp: FC = () => {
 					<p className="mt-3 text-secondary">Log in or Create account to get back your account!</p>
 				</div>
 
-				<Button
-					className="mt-9 w-full rounded-full"
-					raised
-					text
-					severity="secondary"
-					icon={<GoogleIcon width={26} height={26} />}
-					label="Continue with Google"
-				/>
+				<GoogleLoginButton className="mt-9" onSuccess={onGoogleLoginSuccess} onError={onGoogleLoginError} />
 
 				<form className="mt-9" onSubmit={handleSubmit(onSubmit)}>
 					<div className="flex max-w-[440px] flex-col">
@@ -114,23 +130,31 @@ const SignUp: FC = () => {
 							)}
 						</div>
 
-						<div className="mt-6 flex flex-col gap-2">
-							<label htmlFor="password">Password</label>
-							<Password
-								id="password"
-								aria-describedby="password-help"
-								invalid={!!errors.password}
-								feedback={false}
-								toggleMask
-								{...register("password")}
-								inputRef={register("password").ref}
-							/>
-							{errors.password && (
-								<small id="password-help" className={cc("flex gap-2", errors.password && "text-error")}>
-									<CircleXIcon size="20" className="text-error" /> {errors.password.message}
-								</small>
+						<Controller
+							control={control}
+							name="password"
+							render={({ field: { onChange, onBlur, value, ref } }) => (
+								<div className="mt-6 flex flex-col gap-2">
+									<label htmlFor="password">Password</label>
+									<Password
+										id="password"
+										aria-describedby="password-help"
+										invalid={!!errors.password}
+										toggleMask
+										feedback={false}
+										value={value}
+										onChange={onChange}
+										onBlur={onBlur}
+										inputRef={ref}
+									/>
+									{errors.password && (
+										<small id="password-help" className={cc("flex gap-2", errors.password && "text-error")}>
+											<CircleXIcon size="20" className="text-error" /> {errors.password.message}
+										</small>
+									)}
+								</div>
 							)}
-						</div>
+						/>
 					</div>
 
 					{errors.root && <p className="mt-5 text-center text-error">{errors.root.message}</p>}

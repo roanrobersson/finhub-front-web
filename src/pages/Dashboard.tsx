@@ -3,6 +3,8 @@ import { NavLink } from "react-router";
 import SearchIcon from "assets/icons/search.svg?react";
 import routeKeys from "routeKeys";
 
+import AvatarUpload from "components/AvatarUpload";
+
 const Dashboard = () => {
 	return (
 		<>
@@ -25,6 +27,8 @@ const Dashboard = () => {
 						<SearchIcon />
 
 						<img src="any-image.png" alt="search icon" />
+
+						<AvatarUpload />
 					</div>
 				</div>
 			</main>
